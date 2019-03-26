@@ -19,4 +19,6 @@ class Message:
 
     def serialize(self):
         return "{sender:" + self.sender + "recipients" + ";".join(str(x) for x in self.recipients) + ", time:" + self.time.strftime("%d;%m;%Y;%H;%M;%S") + "uuid:" + self.uuid.hex + ", data:" + self.data + "}"
-        
+
+    def encode(self):
+        return self.serialize.encode
