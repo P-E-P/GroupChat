@@ -9,16 +9,27 @@ __maintainer__ = "Pierre-Emmanuel Patry"
 __email__ = "ppatry@csumb.edu"
 __status__ = "Production"
 
+from threading import Thread
 import argparse
 import sys
 
 from client import *
 from command import *
 import username
+import log
 
+def send(client):
+    # TODO: Thread to send messages
+    pass
+
+def receive(client):
+    # TODO: Thread to receive messages
+    pass
 
 if __name__ == '__main__':
 
+    log.checkANSI()
+    
     parser = argparse.ArgumentParser(description="Groupchat client")
     # User needs to set the hostname
     parser.add_argument('hostname',help="Specify your hostname")
@@ -37,7 +48,8 @@ if __name__ == '__main__':
 
     print("Connected")
 
-        
+    rcvThread = Thread(target = receive, args = client).start()
+    sndThread = Thread(target = send, args = client).start()
     """
     while lastInput. Command.QUIT:
         pass

@@ -18,7 +18,12 @@ class Message:
         self.uuid = uuid.uuid4()
 
     def serialize(self):
-        return "{sender:" + self.sender + "recipients" + ";".join(str(x) for x in self.recipients) + ", time:" + self.time.strftime("%d;%m;%Y;%H;%M;%S") + "uuid:" + self.uuid.hex + ", data:" + self.data + "}"
+        return self.sender + ";".join(str(x) for x in self.recipients) + ", time:" + self.time.strftime("%d/%m/%Y/%H/%M/%S") + "uuid:" + self.uuid.hex + ", data:" + self.data
 
     def encode(self):
         return self.serialize.encode
+
+
+def fromStr(data):
+    # TODO: Parse message to get sender, recipiets, data and time from the encoded string
+    pass
