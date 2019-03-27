@@ -1,15 +1,6 @@
 from datetime import datetime
 import uuid
 
-"""
-Recipients are for private messages, you could also use special keyword to designate special recipient:
-
-- all    : send the message to everyone.
-- server : send the message to the server only (commands).
-- last   : send the message to the last client group you talked to,
-           if no group has been contacted previously the message is sent to everyone.
-"""
-
 MSG_SEP = "\u001f"
 RECIPIENT_SEP = ";"
 TIME_SEP = "/"
@@ -44,6 +35,7 @@ def fromStr(data):
     recipents = parse[0].replace(" ", "").split(RECIPIENT_SEP)
     # Getting time
     parse = parse[2].partition(MSG_SEP)
+    print("Time received:", parse[0])
     time = datetime.strptime(parse[0], TIME_FORMAT)
     # Getting uuid
     parse = parse[2].partition(MSG_SEP)

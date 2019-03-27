@@ -36,7 +36,7 @@ class Client:
         self.socket.send(msg.encode())
 
     def send(self, data):
-        self.socket.send(Message(self.username, __determineRecipients(data), data))
+        self.socket.send(Message(self.username, __parseRecipients(data), data))
 
     def receive(self):
         # Receive a message and parse it.
@@ -48,7 +48,7 @@ class Client:
         self.socket.close()
         self.running = False
 
-    def __determineRecipients(data):
+    def __parseRecipients(data):
         ret = ""
         # TODO: parse the string to get all recipients
         return ret
