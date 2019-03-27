@@ -59,4 +59,6 @@ if __name__ == '__main__':
     rcvThread = Thread(target = receive, args = client).start()
     sndThread = Thread(target = send, args = client).start()
 
+    client.disconnect()
+    
     log.info("Disconnected")

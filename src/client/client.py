@@ -43,7 +43,9 @@ class Client:
         return messagefromStr(self.socket.recv(4096).decode())
      
     def disconnect(self):
-        socket.send(Message(usrName, "SERVER", "BYE").encode())
+        log.info("Disconnecting...")
+        self.socket.send(Message(usrName, "SERVER", "BYE").encode())
+        self.socket.close()
         self.running = False
 
     def __determineRecipients(data):
