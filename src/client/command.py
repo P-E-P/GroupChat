@@ -1,6 +1,10 @@
 from enum import Enum
 
-class Command(Enum):
-    QUIT = 1
-    LIST = 2
-    KICK = 3
+class CommandIdentifiers(Enum):
+    PREFIX = "/"
+    SEPARATOR = " "
+
+class CommandList(Enum):
+    QUIT = "quit"
+    LIST = "list"
+    KICK = "kick"

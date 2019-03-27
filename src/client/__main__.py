@@ -18,13 +18,21 @@ from command import *
 import username
 import log
 
-def send(client):
-    # TODO: Thread to send messages
+def parseCommand(self, command):
+    # TODO: command parsing
     pass
 
+def send(client):
+    while client.running:
+        ipt = input("Send:")
+        if(ipt.startswith(CommandIdentifiers.PREFIX)):
+            parseCommand(ipt)
+        else:
+            client.send(ipt)
+
 def receive(client):
-    # TODO: Thread to receive messages
-    pass
+    while client.running:
+        message = client.receive()
 
 if __name__ == '__main__':
 
@@ -46,11 +54,9 @@ if __name__ == '__main__':
     if not client.connect(args.hostname, args.port):
         sys.exit()
 
-    print("Connected")
+    log.info("Connected")
 
     rcvThread = Thread(target = receive, args = client).start()
     sndThread = Thread(target = send, args = client).start()
-    """
-    while lastInput. Command.QUIT:
-        pass
-    """
+
+    log.info("Disconnected")
