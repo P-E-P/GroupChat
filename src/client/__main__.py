@@ -23,13 +23,13 @@ def parseCommand(self, command):
     pass
 
 def send(client):
+    print("Client sending routine")
     while client.running:
         ipt = input("Send:")
         if(ipt.startswith(CommandIdentifiers.PREFIX)):
             parseCommand(ipt)
         else:
             client.send(ipt)
-
 def receive(client):
     while client.running:
         message = client.receive()

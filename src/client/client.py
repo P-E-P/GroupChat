@@ -15,9 +15,13 @@ class Client:
             self.socket.connect((hostname,port))
 
             # Ask the server if the username was already taken.
-            self.socket.sendMsg(Message("NULL", "SERVER", self.username).encode())
+            log.info("Requesting username...")
+            message = Message("NULL", ["SERVER"], self.username)
+            serial = message.serialize()
+            self.socket.send(serial.encode())
             # Receive the answer from the server.
-            answer = message.fromStr(self.socket.recv(1024).decode())
+            answerdata = self.socket.recv(1024).decode()
+            answer = message.fromStr(answerdata)
 
             # Changing the client username if it was taken.
             if(answer.data != self.username):
@@ -30,10 +34,6 @@ class Client:
             log.err(ex)
         finally:
             return self.running
-
-    def sendMsg(self, msg):
-        # Send a message.
-        self.socket.send(msg.encode())
 
     def send(self, data):
         self.socket.send(Message(self.username, __parseRecipients(data), data))

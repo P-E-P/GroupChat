@@ -23,6 +23,7 @@ class Message:
         self.data = data
         self.time = time if time is not None else datetime.now()
         self.uuid = msgUUID if msgUUID is not None else uuid.uuid4()
+        print("Message-> sender:", self.sender, "recipients:", self.recipients, "time:", self.time, "uuid:", self.uuid, "data:", self.data)
 
     def serialize(self):
         return self.sender + MSG_SEP + \
@@ -30,10 +31,6 @@ class Message:
             self.time.strftime(TIME_FORMAT) + MSG_SEP + \
             str(self.uuid) + MSG_SEP + \
             self.data
-
-    def encode(self):
-        return self.serialize.encode
-
     
 def fromStr(data):
     # Getting sender
@@ -41,7 +38,7 @@ def fromStr(data):
     sender = parse[0]
     # Getting recipients
     parse = parse[2].partition(MSG_SEP)
-    recipents = parse[0].replace(" ", "").split(RECIPIENT_SEP)
+    recipients = parse[0].split(RECIPIENT_SEP)
     # Getting time
     parse = parse[2].partition(MSG_SEP)
     time = datetime.strptime(parse[0], TIME_FORMAT)

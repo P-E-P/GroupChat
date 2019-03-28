@@ -22,20 +22,15 @@ class Message:
             str(self.uuid) + MSG_SEP + \
             self.data
 
-    def encode(self):
-        return self.serialize.encode
-
-    
 def fromStr(data):
     # Getting sender
     parse = data.partition(MSG_SEP)
     sender = parse[0]
     # Getting recipients
     parse = parse[2].partition(MSG_SEP)
-    recipents = parse[0].replace(" ", "").split(RECIPIENT_SEP)
+    recipients = parse[0].split(RECIPIENT_SEP)
     # Getting time
     parse = parse[2].partition(MSG_SEP)
-    print("Time received:", parse[0])
     time = datetime.strptime(parse[0], TIME_FORMAT)
     # Getting uuid
     parse = parse[2].partition(MSG_SEP)
