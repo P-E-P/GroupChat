@@ -40,7 +40,7 @@ class Client:
     def receive(self):
         # Receive a message and parse it.
         return fromStr(self.socket.recv(4096).decode())
-     
+
     def disconnect(self):
         log.info("Disconnecting...")
         self.socket.send(Message(self.username, "SERVER", "BYE").serialize().encode())
@@ -48,7 +48,10 @@ class Client:
         self.running = False
 
     def __parseRecipients(data):
-        ret = ""
-        # TODO: parse the string to get all recipients
-        return ret
+        recipients = []
+        wordlist = data.split(" ")
+        for elt in wordlist:
+            if elt[0] == '@':
+                recipients.append(elt[1:])
+        return recipients
 
