@@ -14,19 +14,19 @@ import argparse
 import sys
 
 from client import *
-from command import *
+import command
 import username
 import log
 
-def parseCommand(self, command):
+def parseCommand(self, ipt):
     # TODO: command parsing
     pass
 
 def send(client):
-    print("Client sending routine")
+    # TODO: Handle that part
     while client.running:
         ipt = input("Send:")
-        if(ipt.startswith(CommandIdentifiers.PREFIX)):
+        if(ipt.startswith(command.PREFIX)):
             parseCommand(ipt)
         else:
             client.send(ipt)
@@ -56,9 +56,10 @@ if __name__ == '__main__':
 
     log.info("Connected")
 
-    rcvThread = Thread(target = receive, args = client).start()
-    sndThread = Thread(target = send, args = client).start()
-
+    rcvThread = Thread(target = receive, args=[client]).start()
+    #sndThread = Thread(target = send, args = client).start()
+    send(client)
+    
     client.disconnect()
     
     log.info("Disconnected")

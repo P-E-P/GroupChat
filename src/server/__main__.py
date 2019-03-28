@@ -38,11 +38,11 @@ def addConnection(clientSocket, addr):
 
     
     users[usrname.upper()] = []
-    print("[INFO]: Added the user to the list:\n", users)
+    print("[INFO]: Added user", usrname,"with address",addr,"to the list")
 
     message = Message("SERVER", [usrname], usrname).serialize()
     # Send back the attributed username
-    print("message:", message)
+    print("[INFO]: Sending confirmation for ", addr)
     clientSocket.send(message.encode())
 
     # TODO: Handle message loop until client disconnect

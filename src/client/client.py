@@ -21,8 +21,7 @@ class Client:
             self.socket.send(serial.encode())
             # Receive the answer from the server.
             answerdata = self.socket.recv(1024).decode()
-            answer = message.fromStr(answerdata)
-
+            answer = fromStr(answerdata)
             # Changing the client username if it was taken.
             if(answer.data != self.username):
                 log.warn("Server indicate your username was taken, your new username is", answer.data)
@@ -40,11 +39,11 @@ class Client:
 
     def receive(self):
         # Receive a message and parse it.
-        return messagefromStr(self.socket.recv(4096).decode())
+        return fromStr(self.socket.recv(4096).decode())
      
     def disconnect(self):
         log.info("Disconnecting...")
-        self.socket.send(Message(usrName, "SERVER", "BYE").encode())
+        self.socket.send(Message(self.username, "SERVER", "BYE").serialize().encode())
         self.socket.close()
         self.running = False
 

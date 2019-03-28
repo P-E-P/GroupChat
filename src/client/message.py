@@ -23,8 +23,7 @@ class Message:
         self.data = data
         self.time = time if time is not None else datetime.now()
         self.uuid = msgUUID if msgUUID is not None else uuid.uuid4()
-        print("Message-> sender:", self.sender, "recipients:", self.recipients, "time:", self.time, "uuid:", self.uuid, "data:", self.data)
-
+        
     def serialize(self):
         return self.sender + MSG_SEP + \
             RECIPIENT_SEP.join(str(x) for x in self.recipients) + MSG_SEP + \
