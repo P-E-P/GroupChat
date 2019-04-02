@@ -6,8 +6,6 @@ __credits__ = ["Maxime-Andrea Gouet", "Pierre-Emmanuel Patry"]
 __license__ = "MIT"
 __version__ = "1.0"
 __maintainer__ = "Pierre-Emmanuel Patry"
-__email__ = "ppatry@csumb.edu"
-__status__ = "Production"
 
 import time
 import argparse
@@ -45,10 +43,21 @@ def addConnection(clientSocket, addr):
     print("[INFO]: Sending confirmation for ", addr)
     clientSocket.send(message.encode())
 
-    # TODO: Handle message loop until client disconnect
-    while True:
-        continue
+    # TODO: lauch thread to transmit messages
     
+    while True:
+        try:
+            data = clientSocket.recv(4096).decode()
+            msg = fromStr(data)
+            if "SERVER" in msg.recipients and msg.data == "QUIT":
+                print("[INFO]: Client", msg.sender,"disconnected")
+                break;
+            
+            print("Received a new message from ", msg.sender, "to", msg.recipients, ": (", msg.time, ")", msg.data)
+        except Exception:
+            print("Connection to", usrname, "has been lost")
+            break;
+    # TODO: remove username from the username dict and stop retransmit thread
 
 parser = argparse.ArgumentParser(description="Handle message from client and send back the message order")
 parser.add_argument('-v', '--verbose', action="count", default=0, help='Increase output verbosity')

@@ -37,7 +37,7 @@ def fromStr(data):
     sender = parse[0]
     # Getting recipients
     parse = parse[2].partition(MSG_SEP)
-    recipients = parse[0].split(RECIPIENT_SEP)
+    recipients = set(parse[0].split(RECIPIENT_SEP))
     # Getting time
     parse = parse[2].partition(MSG_SEP)
     time = datetime.strptime(parse[0], TIME_FORMAT)

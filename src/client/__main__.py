@@ -6,8 +6,6 @@ __credits__ = ["Maxime-Andrea Gouet", "Pierre-Emmanuel Patry"]
 __license__ = "MIT"
 __version__ = "1.0"
 __maintainer__ = "Pierre-Emmanuel Patry"
-__email__ = "ppatry@csumb.edu"
-__status__ = "Production"
 
 from threading import Thread
 import argparse
@@ -18,16 +16,17 @@ import command
 import username
 import log
 
-def parseCommand(self, ipt):
-    # TODO: command parsing
-    pass
+def parseCommand(ipt):
+    args = ipt.split(" ")
+    if args[0] == "leave":
+        client.running = False
 
 def send(client):
     # TODO: Handle that part
     while client.running:
         ipt = input("Send:")
         if(ipt.startswith(command.PREFIX)):
-            parseCommand(ipt)
+            parseCommand(ipt[1:])
         else:
             client.send(ipt)
 def receive(client):

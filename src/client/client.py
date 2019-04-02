@@ -35,19 +35,21 @@ class Client:
             return self.running
 
     def send(self, data):
-        self.socket.send(Message(self.username, __parseRecipients(data), data))
+        self.socket.send(Message(self.username, self.__parseRecipients(data), data).serialize().encode())
 
     def receive(self):
         # Receive a message and parse it.
-        return fromStr(self.socket.recv(4096).decode())
+        try:
+            return fromStr(self.socket.recv(4096).decode())
+        except:
+            pass
 
     def disconnect(self):
         log.info("Disconnecting...")
-        self.socket.send(Message(self.username, "SERVER", "BYE").serialize().encode())
+        self.socket.send(Message(self.username, ["SERVER"], "QUIT").serialize().encode())
         self.socket.close()
-        self.running = False
 
-    def __parseRecipients(data):
+    def __parseRecipients(self, data):
         recipients = []
         wordlist = data.split(" ")
         for elt in wordlist:
