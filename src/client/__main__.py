@@ -22,7 +22,6 @@ def parseCommand(ipt):
         client.running = False
 
 def send(client):
-    # TODO: Handle that part
     while client.running:
         ipt = input("Send:")
         if(ipt.startswith(command.PREFIX)):
@@ -32,6 +31,8 @@ def send(client):
 def receive(client):
     while client.running:
         message = client.receive()
+        print(message.sender,"(", message.time,"):",message.data)
+        
 
 if __name__ == '__main__':
 

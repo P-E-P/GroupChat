@@ -11,13 +11,25 @@ import time
 import argparse
 from socket import *
 from threading import Thread
+from queue import *
 
 from message import *
 
 # We're using a list as a thread pool.
 Tlist = []
 # List of users
-users = dict({"SERVER":[]})
+users = dict({"SERVER":Queue()})
+
+'''
+This function is started from a new thread,
+it retransmit all message in the user queue to
+the user
+'''
+def retransmit(clientSocket, username):
+    up = username.upper()
+    while True:
+        while not users[up].empty():
+            clientSocket.send(users[up].get().serialize().encode())
 
 def addConnection(clientSocket, addr):
     print("[INFO]: New connection from", addr)
@@ -35,7 +47,7 @@ def addConnection(clientSocket, addr):
             i += 1
 
     
-    users[usrname.upper()] = []
+    users[usrname.upper()] = Queue()
     print("[INFO]: Added user", usrname,"with address",addr,"to the list")
 
     message = Message("SERVER", [usrname], usrname).serialize()
@@ -43,8 +55,9 @@ def addConnection(clientSocket, addr):
     print("[INFO]: Sending confirmation for ", addr)
     clientSocket.send(message.encode())
 
-    # TODO: lauch thread to transmit messages
-    
+    retransmitThread = Thread(target = retransmit, args = (clientSocket, usrname))
+    retransmitThread.start()
+
     while True:
         try:
             data = clientSocket.recv(4096).decode()
@@ -54,10 +67,26 @@ def addConnection(clientSocket, addr):
                 break;
             
             print("Received a new message from ", msg.sender, "to", msg.recipients, ": (", msg.time, ")", msg.data)
-        except Exception:
+            # If no recipient specified, send to all
+            if msg.recipients == set(['']):
+                for key in users:
+                    if(key != usrname.upper()):
+                        users[key].put(msg)
+            else:
+                for recip in msg.recipients:
+                    if recip in users:
+                        users[recip.upper()].put(msg)
+
+
+        except Exception as e:
+            print(e)
             print("Connection to", usrname, "has been lost")
             break;
-    # TODO: remove username from the username dict and stop retransmit thread
+
+    # Stopping retransmit thread
+    retransmitThread.join()
+    # Removing user from the list
+    users.pop(username.upper(), None)
 
 parser = argparse.ArgumentParser(description="Handle message from client and send back the message order")
 parser.add_argument('-v', '--verbose', action="count", default=0, help='Increase output verbosity')
