@@ -40,10 +40,11 @@ class Client:
     def receive(self):
         # Receive a message and parse it.
         try:
-            return fromStr(self.socket.recv(4096).decode())
-        except:
-            pass
-
+            msg = self.socket.recv(4096).decode()
+        except Exception as e:
+            print(e)
+        return fromStr(msg)
+            
     def disconnect(self):
         log.info("Disconnecting...")
         self.socket.send(Message(self.username, ["SERVER"], "QUIT").serialize().encode())

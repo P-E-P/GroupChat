@@ -23,7 +23,7 @@ def parseCommand(ipt):
 
 def send(client):
     while client.running:
-        ipt = input("Send:")
+        ipt = input("")
         if(ipt.startswith(command.PREFIX)):
             parseCommand(ipt[1:])
         else:
@@ -57,7 +57,6 @@ if __name__ == '__main__':
     log.info("Connected")
 
     rcvThread = Thread(target = receive, args=[client]).start()
-    #sndThread = Thread(target = send, args = client).start()
     send(client)
     
     client.disconnect()
