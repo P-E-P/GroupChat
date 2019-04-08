@@ -66,6 +66,15 @@ class Server:
         print("[INFO]: Server stopped")
 
 
+    # This function send a message to all users
+    def sendAll(self, message):
+        users = []
+        for i in self.users.values():
+            users.append(i.username)
+
+        for i in self.users.values():
+            i.awaiting_messages.put(Message("SERVER", users, message))
+
 
     # This function has it's own thread,
     # it iterates over all users and send

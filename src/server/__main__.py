@@ -24,6 +24,13 @@ server.start()
 
 ipt = input()
 while ipt != "stop":
+    if ipt == "send":
+        print("Write the message you whish to send to all users (leave blank to cancel):")
+        message = input()
+        if message != "":
+            server.sendAll(message)
+    else:
+        print("Command not found")
     ipt = input()
 
 server.close()
