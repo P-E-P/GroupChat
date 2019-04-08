@@ -16,22 +16,34 @@ import command
 import username
 import log
 
-def parseCommand(ipt):
+def parseCommand(ipt, client):
     args = ipt.split(" ")
+    #TODO: make command to request new username
     if args[0] == "leave":
         client.running = False
+    if args[0] == "list":
+        client.sendCommand("LIST")
+    if args[0] == "help":
+        print("/help : display this message")
+        print("/leave : disconnect")
+        print("/list : get the list of connected people")
 
 def send(client):
     while client.running:
         ipt = input("")
-        if(ipt.startswith(command.PREFIX)):
-            parseCommand(ipt[1:])
-        else:
-            client.send(ipt)
+        # Preventing empty input
+        if ipt != "":
+            if ipt.startswith(command.PREFIX):
+                parseCommand(ipt[1:], client)
+            else:
+                client.send(ipt)
+
+
 def receive(client):
     while client.running:
         message = client.receive()
-        print(message.sender,"(", message.time,"):",message.data)
+        if message is not None:
+            print(message.sender,"(", message.time,"):",message.data)
         
 
 if __name__ == '__main__':
@@ -55,10 +67,10 @@ if __name__ == '__main__':
         sys.exit()
 
     log.info("Connected")
+    log.info("Use /help to get the list of available commands")
 
     rcvThread = Thread(target = receive, args=[client]).start()
     send(client)
-    
     client.disconnect()
     
     log.info("Disconnected")

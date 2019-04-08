@@ -32,10 +32,21 @@ class Client:
                     for key in users:
                         if key != self.username.upper():
                             users[key].awaiting_messages.put(msg)
+                
+                # Handle messages for server exclusively
+                elif msg.recipients == set(['SERVER']):
+                    if(msg.data == "LIST"):
+                        print("[INFO]:", msg.sender, "requested the list of user")
+                        answer = ">>"
+                        for i in users.values():
+                            answer += "->" + i.username
+                        self.awaiting_messages.put(Message("SERVER",[self.username], answer))
+
+                # Handle messages with specific recipient
                 else:
                     for recip in msg.recipients:
-                        if recip in users:
-                            users[recip.upper()].put(msg)
+                        if recip.upper() in users:
+                            users[recip.upper()].awaiting_messages.put(msg)
 
             except Exception as e:
                 print(e)

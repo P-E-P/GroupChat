@@ -37,17 +37,22 @@ class Client:
     def send(self, data):
         self.socket.send(Message(self.username, self.__parseRecipients(data), data).serialize().encode())
 
+    def sendCommand(self, command):
+        self.socket.send(Message(self.username, ["SERVER"], command).serialize().encode())
+        
     def receive(self):
         # Receive a message and parse it.
         try:
             msg = self.socket.recv(4096).decode()
+            return fromStr(msg)
         except Exception as e:
-            print(e)
-        return fromStr(msg)
+            if self.running:
+                print(e)
+                self.running = False
             
     def disconnect(self):
         log.info("Disconnecting...")
-        self.socket.send(Message(self.username, ["SERVER"], "QUIT").serialize().encode())
+        self.sendCommand("QUIT")
         self.socket.close()
 
     def __parseRecipients(self, data):
