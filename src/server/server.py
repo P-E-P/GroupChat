@@ -97,15 +97,23 @@ class Server:
         data = clientSocket.recv(4096).decode()
         msg = fromStr(data)
         username = msg.data
+        
+        # Preventing the client from usurpating server identity
+        if "SERVER" in  username.upper():
+            print("[WARN]: User from", addr, "tried to usurpate server's identity with username", username)
+            username = "Marvin"
+
+        base = username
+        
         # Checking if username is already registered in user list.
-        if msg.data.upper() in self.users.keys():
+        if username.upper() in self.users.keys():
             print("[WARN]: User already recorded, attributing a new username...")
             # The server append a number to the username until
             # the generated username is not registered.
-            username = msg.data + "1"
+            username = base + "1"
             i = 2
             while username.upper() in self.users.keys():
-                username = msg.data + str(i)
+                username = base + str(i)
                 i += 1
 
         # Creating the message to send confirmation to the client
