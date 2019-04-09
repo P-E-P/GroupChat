@@ -5,7 +5,7 @@ from message import *
 
 
 class Server:
-    def __init__(self, port):
+    def __init__(self, port, listPath=None):
         self.running = False
         self.accepting = False
         # This dict contains the users, to access a user
@@ -14,6 +14,13 @@ class Server:
         # Create a TCP socket
         self.ssocket = socket.socket(AF_INET,SOCK_STREAM)
         self.port = port
+
+        # If the server was started with a whitelist or blacklist as argument.
+        if listPath != None:
+            self.whitelistMode = listPath[0]
+            print("[INFO]: Detected", "whitelist" if self.whitelistMode else "blacklist")
+            
+            
 
     # Start the accepting thread and retransmission thread
     def start(self):

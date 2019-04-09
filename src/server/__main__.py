@@ -11,15 +11,28 @@ import time
 import argparse
 
 from server import *
+from userlist import *
+
 
 parser = argparse.ArgumentParser(description="Handle message from client and send back the message order")
 parser.add_argument('-v', '--verbose', action="count", default=0, help='Increase output verbosity')
-parser.add_argument('-p','--port', help='specify the port (default=12000)', default=12000, type=int, nargs='?',const=True, required=False)
-parser.add_argument('-V','--version', action='version', version='%(prog)s 1.0')
+parser.add_argument('-p', '--port', help='specify the port (default=12000)', default=12000, type=int, nargs='?',const=True, required=False)
+parser.add_argument('-V', '--version', action='version', version='%(prog)s 1.0')
+
+userlist = parser.add_mutually_exclusive_group()
+userlist.add_argument('-w', '--whitelist', type=str, default=None,required=False)
+userlist.add_argument('-b', '--blacklist', type=str, default=None, required=False)
 
 args = parser.parse_args()
 
-server = Server(args.port)
+if args.whitelist is not None:
+    ulist = Userlist(True, args.whitelist)
+elif args.blacklist is not None:
+    ulist = Userlist(False, args.blacklist)
+else:
+    ulist = None
+
+server = Server(args.port, ulist)
 server.start()
 
 ipt = input()
@@ -30,7 +43,7 @@ while ipt != "stop":
         if message != "":
             server.sendAll(message)
     else:
-        print("Command not found")
+        print("[ERR]: Command not found")
     ipt = input()
 
 server.close()
